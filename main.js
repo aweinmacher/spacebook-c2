@@ -39,29 +39,38 @@ function renderPosts() { // prepares html <div> for DOM refresh
     for (var post in posts) {
         var commentsHTML = '';
         for (var com in posts[post].comments) {
-            commentsHTML += '<li>' + posts[post].comments[com].user_name + ': ' + posts[post].comments[com].com_text + '</li>';
+            commentsHTML += `<li>${posts[post].comments[com].user_name}: ${posts[post].comments[com].com_text}</li>`;
         }
-        $(".posts").append('<div class="post" data-id="' + posts[post].id + '"><button type="button" class="remove">REMOVE</button> #' + posts[post].id + ' ' + posts[post].text + '<ul class="comments">' + commentsHTML + '</ul><form><input type="text" class="user-name" placeholder="name"><input type="text" class="comment" placeholder="comment"><button type="button" class="add-comment">Comment</button></form></div><br>');
+        $(".posts").append(`<div class="post" data-id="${posts[post].id}">
+                                <button type="button" class="remove">REMOVE</button>
+                                #${posts[post].id} ${posts[post].text}
+                                <ul class="comments">
+                                    ${commentsHTML}
+                                </ul>
+                                <form>
+                                    <input type="text" class="user-name" placeholder="name">
+                                    <input type="text" class="comment" placeholder="comment">
+                                    <button type="button" class="add-comment">Comment</button>
+                                </form>
+                            </div><br>`);
     }
 }
 
-function postPost() { // unites the two functions declared above
+function postPost() { // onclick function
     addPost(id, $("#post-name").val());
     renderPosts();
     id++;
-    //var com_id = 0;
     $("#post-name").val("");
 }
 function postComment() {
-    var userName = $(this).closest("form").find(".user-name").val();
-    var commentText = $(this).prev(".comment").val();
+    var userName = $(this).closest("form").find(".user-name");
+    var commentText = $(this).prev(".comment");
     var postId = $(this).closest(".post").data().id;
-    addComment(userName, commentText, postId);
+    addComment(userName.val(), commentText.val(), postId);
     renderPosts();
-    $(this).closest("form").find(".user-name").val("");
-    $(this).prev(".comment").val("");
+    userName.val("");
+    commentText.val("");
 }
-
 
 $(".add-post").on("click", postPost); // on click adds post to database and screen
 $(".posts").on("click", ".remove", removePost);
