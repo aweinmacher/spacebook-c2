@@ -12,20 +12,29 @@ function addPost(id, text) { //adds the fresh post to our data base
     console.log(posts);
 }
 function findPost(id) {
-    for (var i = 0; i < posts.length; i++) {
-        if (posts[i].id === id) {
-            return posts[i];
-        }
-    }
+    // return posts.find(post => post.id === id);
+    return posts.find(function(post) { return post.id === id});
+    // for (var i = 0; i < posts.length; i++) {
+    //     if (posts[i].id === id) {
+    //         return posts[i];
+    //     }
+    // }
 }
 function addComment(user_name, com_text, id) {
-    findPost(id).comments.push(
+    var post = findPost(id);
+    post.comments.push(
         {
             user_name: user_name,
-            com_text: com_text
+            com_text: com_text,
+            com_id: generateNewComId(post.comments)
         }
     );
 }
+function generateNewComId(comments) {
+   var commentsId = comments.map( function(comment) { return comment.com_id; } );
+   return Math.max(commentsId)+1;
+}
+
 function removePost() { // removes post object from the array and renders new div 
     var id = $(this).closest(".post").data().id;
     var currentPostIndex = posts.indexOf(findPost(id));
