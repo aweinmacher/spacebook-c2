@@ -26,11 +26,11 @@ function addComment(user_name, com_text, id) {
         {
             user_name: user_name,
             com_text: com_text,
-            com_id: generateNewComId(post.comments)
+            com_id: _generateNewComId(post.comments)
         }
     );
 }
-function generateNewComId(comments) {
+function _generateNewComId(comments) {
    var commentsId = comments.map( function(comment) { return comment.com_id; } );
    return Math.max(commentsId)+1;
 }
