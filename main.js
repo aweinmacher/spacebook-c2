@@ -47,9 +47,11 @@ var SpacebookApp = function () {
     for (var i = 0; i < posts.length; i += 1) {
       var post = posts[i];
 
-      var commentsContainer = '<div class="comments-container">' +
-      '<input type="text" class="comment-name">' +
-      '<button class="btn btn-primary add-comment">Post Comment</button> </div>';
+      var commentsContainer = `<div class="comments-container">
+      <input type="text" class="comment-name" placeholder=" comment">
+      <button class="btn btn-primary add-comment">Post Comment</button>
+      <div class="comments-list"></div>
+      </div>`;
 
       $posts.append('<div class="post" data-id=' + post.id + '>'
         + '<a href="#" class="remove">remove</a> ' + '<a href="#" class="show-comments">comments</a> ' + post.text +
@@ -81,12 +83,12 @@ var SpacebookApp = function () {
     console.log(posts);
   }
 
-  // TO FINISH
   var renderComments = function (postId, currentPost) {
-    $(currentPost).find("comments-container").empty();
+    currentPost.find(".comments-list").empty();
     var post = _findPostById(postId);
     for (var i=0; i<post.comments.length; i++) {
-
+        var comment = post.comments[i].text;
+        $(currentPost).find(".comments-list").append(`<p>${comment}</p>`);
     }
   }
 
@@ -114,6 +116,7 @@ $('.add-post').on('click', function () {
   
   app.createPost(text);
   app.renderPosts();
+  $('#post-name').val("");
 });
 
 $('.posts').on('click', '.remove', function () {
@@ -130,4 +133,5 @@ $('.posts').on('click','.add-comment', function () {
   var commentText = $(this).prev(".comment-name").val();
   app.createComment(postId, commentText);
   app.renderComments(postId, currentPost);
+  $(this).prev(".comment-name").val("");
 });
