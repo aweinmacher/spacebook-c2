@@ -74,9 +74,19 @@ var SpacebookApp = function () {
     $clickedPost.find('.comments-container').toggleClass('show');
   }
 
+  function _generateNewComId(comments) {
+    var commentsId = comments.map(function(comment) {
+      return comment.id;
+    });
+    return Math.max(commentsId) + 1;
+  }
+
   var createComment = function (postId, commentText) {
+    var comId = _generateNewComId(posts[postId].comments);
+    console.log(comId);
     var comment = {
-      text: commentText
+      text: commentText,
+      id: comId
     }
     var post = _findPostById(postId);
     post.comments.push(comment);
@@ -86,10 +96,16 @@ var SpacebookApp = function () {
   var renderComments = function (postId, currentPost) {
     currentPost.find(".comments-list").empty();
     var post = _findPostById(postId);
-    for (var i=0; i<post.comments.length; i++) {
-        var comment = post.comments[i].text;
-        $(currentPost).find(".comments-list").append(`<p>${comment}</p>`);
+    for (var i = 0; i < post.comments.length; i++) {
+      var comment = post.comments[i].text;
+      $(currentPost).find(".comments-list").append(
+        `<a href="#" class="remove-comment">remove</a> 
+             <span>${comment}</span><br>`);
     }
+  }
+
+  var removeComment = function (postId, currentComment) {
+
   }
 
   return {
@@ -98,9 +114,7 @@ var SpacebookApp = function () {
     removePost: removePost,
     createComment: createComment,
     renderComments: renderComments,
-
-    // TODO: Implement
-    // removeComment: removeComment,
+    removeComment: removeComment,
     toggleComments: toggleComments
   }
 }
@@ -113,7 +127,7 @@ app.renderPosts();
 // Events
 $('.add-post').on('click', function () {
   var text = $('#post-name').val();
-  
+
   app.createPost(text);
   app.renderPosts();
   $('#post-name').val("");
@@ -123,15 +137,20 @@ $('.posts').on('click', '.remove', function () {
   app.removePost(this);
 });
 
-$('.posts').on('click','.show-comments', function () {
+$('.posts').on('click', '.show-comments', function () {
   app.toggleComments(this);
 });
 
-$('.posts').on('click','.add-comment', function () {
+$('.posts').on('click', '.add-comment', function () {
   var currentPost = $(this).closest('.post');
   var postId = $(this).closest('.post').data().id;
   var commentText = $(this).prev(".comment-name").val();
   app.createComment(postId, commentText);
   app.renderComments(postId, currentPost);
   $(this).prev(".comment-name").val("");
+});
+
+$('.posts').on('click', '.remove-comment', function () {
+  var postId = $(this).closest('.post').data().id;
+
 });
