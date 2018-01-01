@@ -99,8 +99,8 @@ var SpacebookApp = function () {
     for (var i = 0; i < post.comments.length; i++) {
       var comment = post.comments[i].text;
       $(currentPost).find(".comments-list").append(
-        `<a href="#" class="remove-comment">remove</a> 
-             <span>${comment}</span><br>`);
+        `<div class="comment" data-id="${{id}}">
+        <a href="#" class="remove-comment">remove</a> ${comment}</div><br>`);
     }
   }
 
@@ -152,5 +152,7 @@ $('.posts').on('click', '.add-comment', function () {
 
 $('.posts').on('click', '.remove-comment', function () {
   var postId = $(this).closest('.post').data().id;
-
+  var comId = ;
+  var currentComment = 
+  app.removeComment(postId, currentComment);
 });
