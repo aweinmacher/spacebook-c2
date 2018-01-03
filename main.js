@@ -19,6 +19,7 @@ var SpacebookApp = function () {
 
   // the current id to assign to a post
   var currentId = 0;
+  var comId = 0;
   var $posts = $('.posts');
 
   var _findPostById = function (id) {
@@ -74,20 +75,12 @@ var SpacebookApp = function () {
     $clickedPost.find('.comments-container').toggleClass('show');
   }
 
-  function _generateNewComId(comments) {
-    var commentsId = comments.map(function(comment) {
-      return comment.id;
-    });
-    return Math.max(commentsId) + 1;
-  }
-
   var createComment = function (postId, commentText) {
-    var comId = _generateNewComId(posts[postId].comments);
-    console.log(comId);
     var comment = {
       text: commentText,
       id: comId
     }
+    comId++;
     var post = _findPostById(postId);
     post.comments.push(comment);
     console.log(posts);
@@ -98,14 +91,30 @@ var SpacebookApp = function () {
     var post = _findPostById(postId);
     for (var i = 0; i < post.comments.length; i++) {
       var comment = post.comments[i].text;
+      var id = post.comments[i].id;
       $(currentPost).find(".comments-list").append(
-        `<div class="comment" data-id="${{id}}">
-        <a href="#" class="remove-comment">remove</a> ${comment}</div><br>`);
+        `<div class="comment" data-id="${{ id }}">
+        <a href="#" class="remove-comment">remove</a> ${comment}</div>`);
+    }
+  }
+
+  var _findCommentById = function (post, comId) {
+    for (var i = 0; i < post.comments.length; i += 1) {
+      if (post.comments[i].id === id) {
+        return post.comments[i];
+      }
     }
   }
 
   var removeComment = function (postId, currentComment) {
+    var $clickedComment = $(currentComment).closest('.comment');
+    var comId = $(currentComment).data().id;
 
+    var post = _findPostById(id);
+    var comment = _findCommentById(post, comId);
+
+    post.comments.splice(post.comments.indexOf(comment), 1);
+    $clickedComment.remove();
   }
 
   return {
@@ -152,7 +161,6 @@ $('.posts').on('click', '.add-comment', function () {
 
 $('.posts').on('click', '.remove-comment', function () {
   var postId = $(this).closest('.post').data().id;
-  var comId = ;
-  var currentComment = 
-  app.removeComment(postId, currentComment);
+  var comId = $(this).closest('.comment').data().id;
+  app.removeComment(postId, comId);
 });
