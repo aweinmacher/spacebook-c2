@@ -19,7 +19,6 @@ var SpacebookApp = function () {
 
   // the current id to assign to a post
   var currentId = 0;
-  var comId = 0;
   var $posts = $('.posts');
 
   var _findPostById = function (id) {
@@ -77,10 +76,8 @@ var SpacebookApp = function () {
 
   var createComment = function (postId, commentText) {
     var comment = {
-      text: commentText,
-      id: comId
+      text: commentText
     }
-    comId++;
     var post = _findPostById(postId);
     post.comments.push(comment);
     console.log(posts);
@@ -93,28 +90,18 @@ var SpacebookApp = function () {
       var comment = post.comments[i].text;
       var id = post.comments[i].id;
       $(currentPost).find(".comments-list").append(
-        `<div class="comment" data-id="${{ id }}">
+        `<div class="comment">
         <a href="#" class="remove-comment">remove</a> ${comment}</div>`);
     }
   }
 
-  var _findCommentById = function (post, comId) {
-    for (var i = 0; i < post.comments.length; i += 1) {
-      if (post.comments[i].id === id) {
-        return post.comments[i];
-      }
-    }
-  }
-
-  var removeComment = function (postId, currentComment) {
-    var $clickedComment = $(currentComment).closest('.comment');
-    var comId = $(currentComment).data().id;
-
-    var post = _findPostById(id);
-    var comment = _findCommentById(post, comId);
-
-    post.comments.splice(post.comments.indexOf(comment), 1);
-    $clickedComment.remove();
+  var removeComment = function (currentPost, currentComment) {
+    var postId = currentPost.data().id;
+    var post = _findPostById(postId);
+    //var comIndex = currentComment.index();
+    post.comments.splice(currentComment.index(), 1);
+    console.log(posts);
+    currentComment.remove();
   }
 
   return {
@@ -160,7 +147,7 @@ $('.posts').on('click', '.add-comment', function () {
 });
 
 $('.posts').on('click', '.remove-comment', function () {
-  var postId = $(this).closest('.post').data().id;
-  var comId = $(this).closest('.comment').data().id;
-  app.removeComment(postId, comId);
+  var currentPost = $(this).closest('.post');
+  var currentComment = $(this).closest('.comment');
+  app.removeComment(currentPost, currentComment);
 });
